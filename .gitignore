@@ -1,2 +1,4 @@
-*.pyw
+*.pyc
 .env
+.venv
+.vscode

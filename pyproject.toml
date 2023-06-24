@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "modu-friend"
+version = "0.1.0"
+description = ""
+authors = ["myoun <aiden080605@gmail.com>"]
+readme = "README.md"
+packages = [{include = "modu_friend"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+openai = "^0.27.8"
+langchain = "^0.0.212"
+
+[tool.poetry.group.dev.dependencies]
+fastapi = {extras = ["all"], version = "^0.98.0"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

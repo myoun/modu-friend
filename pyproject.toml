@@ -4,12 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["myoun <aiden080605@gmail.com>"]
 readme = "README.md"
-packages = [{include = "modu_friend"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 openai = "^0.27.8"
 langchain = "^0.0.212"
+python-dotenv = "^1.0.0"
+bs4 = "^0.0.1"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = {extras = ["all"], version = "^0.98.0"}

@@ -1,17 +1,14 @@
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
 from .config import Settings
+from .database import Base, engine, SessionLocal
 
 settings = Settings()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    
-    yield
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-    # Shutdown
-
-    return
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()

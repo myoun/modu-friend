@@ -12,6 +12,7 @@ langchain = "^0.0.212"
 pydantic = {version = "*", extras = ["dotenv"]}
 bs4 = "^0.0.1"
 sqlalchemy = "^2.0.19"
+pymysql = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = {extras = ["all"], version = "^0.98.0"}

@@ -15,3 +15,6 @@ class UserSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserReturnSchema(BaseModel):
+    user: UserSchema

@@ -10,22 +10,24 @@ router = APIRouter(
 )
 
 @router.post("/login")
-def login(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.UserSchema:
+def login(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
     db_user = crud.get_user_by_id(db, login.id)
     
     if db_user == None:
         raise exceptions.UserNotFoundError(login.id)
+    
+    user_schema = schemas.UserSchema.from_orm(db_user)
 
-    return db_user
+    return schemas.UserReturnSchema(user=user_schema)
 
 @router.post("/signup")
-def signup(signup: schemas.SignupSchema, db: Session = Depends(get_db)) -> schemas.UserSchema:
+def signup(signup: schemas.SignupSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
     db_user = crud.get_user_by_id(db, signup.id)
 
-    if db_user:
-        raise HTTPException(404, "해당 아이디를 사용하는 유저가 존재합니다.")
+    if db_user != None:
+        raise exceptions.UserAlreadyExistError(signup.id)
     
     user = crud.create_user(db, signup)
     
     user_schema = schemas.UserSchema.from_orm(user)
-    return user_schema
+    return schemas.UserReturnSchema(user=user_schema)

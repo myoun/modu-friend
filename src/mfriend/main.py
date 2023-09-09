@@ -23,6 +23,8 @@ app = FastAPI(lifespan=lifespan, openapi_tags=openapi.tags_metadata)
 
 def use_router():
     from mfriend.auth.router import router as auth_router
+    from mfriend.ai.router import router as ai_router
     app.include_router(auth_router)
+    app.include_router(ai_router)
 
 use_router()

@@ -1,6 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy.sql.type_api import TypeEngine
 from typing import Literal, List
 from mfriend.database import Base
 

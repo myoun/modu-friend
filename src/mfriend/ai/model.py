@@ -9,7 +9,7 @@ class Friend(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(16))
 
-    friend: Mapped[String] = mapped_column(ForeignKey("MODU_USERS.id"))
+    friend_of: Mapped[String] = mapped_column(ForeignKey("MODU_USERS.id"))
     personalities: Mapped[List["FriendPersonality"]] = relationship()
 
 class FriendPersonality(Base):

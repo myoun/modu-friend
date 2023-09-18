@@ -8,13 +8,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 openai = "^0.27.8"
-langchain = "^0.0.236"
+langchain = "0.0.292"
 pydantic = {version = "*", extras = ["dotenv"]}
 bs4 = "^0.0.1"
 sqlalchemy = "^2.0.19"
 pymysql = "^1.1.0"
 gunicorn = "^21.2.0"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
+langchain-experimental = "^0.0.17"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = {extras = ["all"], version = "^0.98.0"}

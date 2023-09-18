@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from mfriend.main import get_db
-from  mfriend.ai import crud, schemas, exceptions, model
+from  mfriend.ai import crud, models, schemas, exceptions
 from mfriend.openapi import OpenApiTags
 
 router = APIRouter(

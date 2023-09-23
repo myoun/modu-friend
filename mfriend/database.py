@@ -9,5 +9,3 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def create_table():
     Base.metadata.create_all(engine)
-
-    

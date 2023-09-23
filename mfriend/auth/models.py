@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship, Mapped
 from typing import List
-from mfriend.ai.model import Friend
+from mfriend.ai.models import Friend
 from mfriend.database import Base
 
 class User(Base):

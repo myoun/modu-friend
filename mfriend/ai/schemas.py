@@ -1,7 +1,9 @@
 from pydantic import BaseModel, Field, validator
+from uuid import UUID
+
 
 class FriendSchema(BaseModel):
-    id: int = Field(title="아이디")
+    id: UUID = Field(title="아이디")
     name: str = Field(title="이름")
     friend_of: str = Field(title="친구 아이디")
     mbti: str = Field(title="친구 MBTI")
@@ -21,3 +23,5 @@ class CreateFriendSchema(BaseModel):
             raise ValueError("Invalid MBTI type submitted.")
         return v
     
+class GetConversationSchema(BaseModel):
+    friend_id: int = Field(title="친구 아이디")

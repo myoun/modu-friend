@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from mfriend.ai import models, schemas
+from uuid import UUID
 
-def get_friend_by_id(db: Session, friend_id: int) -> models.Friend | None:
+def get_friend_by_id(db: Session, friend_id: UUID) -> models.Friend | None:
     return db.query(models.Friend).get(friend_id)
 
 def create_friend(db: Session, friend_info: schemas.CreateFriendSchema) -> models.Friend:

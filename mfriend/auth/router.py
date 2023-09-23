@@ -9,8 +9,8 @@ router = APIRouter(
     tags=[OpenApiTags.AUTH]
 )
 
-@router.post("/login")
-def login(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
+@router.post("/user/info")
+def get_user_info(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
     db_user = crud.get_user_by_id(db, login.id)
     
     if db_user == None:
@@ -20,8 +20,8 @@ def login(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.
 
     return schemas.UserReturnSchema(user=user_schema)
 
-@router.post("/signup")
-def signup(signup: schemas.SignupSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
+@router.post("/user")
+def create_user(signup: schemas.SignupSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
     db_user = crud.get_user_by_id(db, signup.id)
 
     if db_user != None:

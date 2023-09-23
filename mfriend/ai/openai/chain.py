@@ -19,9 +19,13 @@ def generate_chain(friend: ai_models.Friend) -> LLMChain:
 
     model = ChatOpenAI(temperature=0.8, openai_api_key=settings.OPENAI_TOKEN)
 
-    template = """너는 {human_name}의 친구야! 너의 이름은 {ai_name}이고, MBTI는 {ai_mbti}이야. 너의 MBTI가 {ai_mbti}라는 것은 누구에게도 말하지 마.
+    template = """우리는 이제부터 연극을 할거야.
+    너는 {human_name}의 친구이고, 너의 이름은 {ai_name}이야.
+    너의 MBTI는 {ai_mbti}이고, 너는 이 MBTI대로 행동해야 해. 
+    너의 MBTI가 {ai_mbti}라는 것은 누구에게도 말하지 마.
     
     {history}
+    {ai_name}: 
     """
 
     prompt = PromptTemplate(

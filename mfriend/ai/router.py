@@ -10,7 +10,7 @@ router = APIRouter(
     tags=[OpenApiTags.AI]
 )
 
-@router.get("/friend")
+@router.get("/friend/info")
 def get_friend(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.FriendSchema:
     db_friend = crud.get_friend_by_id(db, friend_id)
     if db_friend == None:
@@ -21,13 +21,18 @@ def get_friend(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.Friend
     return friend
 
 @router.post("/friend")
-def create_friend(friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)):
-    db_friend = crud.create_friend(db, friend_schema)
+def create_friend(create_friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)):
+    db_friend = crud.create_friend(db, create_friend_schema)
     friend = schemas.FriendSchema.from_orm(db_friend)
 
     return friend
 
 @router.get("/friend/conversation/")
-def get_conversation():
-    pass
+def get_conversation(friend_id: UUID, db: Session = Depends(get_db)):
+    conversations = crud.get_conversation(db, friend_id)
+    
+    if conversations == None:
+        raise HTTPException(404, "Conversation Not Found")
+    
+    return conversations
 

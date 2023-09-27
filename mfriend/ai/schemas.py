@@ -22,6 +22,8 @@ class CreateFriendSchema(BaseModel):
         if not is_mbti:
             raise ValueError("Invalid MBTI type submitted.")
         return v
-    
+class GetFriendSchema(BaseModel):
+    friend_id: UUID = Field(title="친구 아이디")    
+
 class GetConversationSchema(BaseModel):
-    friend_id: int = Field(title="친구 아이디")
+    friend_id: UUID = Field(title="친구 아이디")

@@ -7,7 +7,7 @@ def get_friend_by_id(db: Session, friend_id: UUID) -> models.Friend | None:
     return db.query(models.Friend).get(friend_id)
 
 def create_friend(db: Session, friend_info: schemas.CreateFriendSchema) -> models.Friend:
-    friend_model = models.Friend(name=friend_info.name, mbti=friend_info.mbti, friend_of=friend_info.friend_of)
+    friend_model = models.Friend(name=friend_info.name, mbti=friend_info.mbti, friend_of=friend_info.friend_of, gender=friend_info.gender)
     db.add(friend_model)
     db.commit()
     db.refresh(friend_model)

@@ -7,6 +7,16 @@ class FriendSchema(BaseModel):
     name: str = Field(title="이름")
     friend_of: str = Field(title="친구 아이디")
     mbti: str = Field(title="친구 MBTI")
+    gender: str = Field(title="친구 성별")
+
+    @validator("gender")
+    def gender_check(cls, v):
+        is_valid_gender = v in ["male", "female"]
+
+        if not is_valid_gender:
+            raise ValueError("Invalid gender type submitted.")
+        return v
+
     class Config:
         orm_mode = True
 
@@ -14,6 +24,7 @@ class CreateFriendSchema(BaseModel):
     name: str = Field(title="이름")
     friend_of: str = Field(title="친구 아이디")
     mbti: str = Field(title="친구 MBTI")
+    gender: str = Field(title="친구 성별", description="male | female")
 
     @validator("mbti")
     def mbti_check(cls, v):

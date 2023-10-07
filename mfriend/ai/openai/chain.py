@@ -27,6 +27,7 @@ def generate_chain(user: auth_schemas.UserSchema, friend: ai_schemas.FriendSchem
 
     raw_template = """우리는 이제부터 상황극을 할거야.
     너는 {human_name}의 친구이고, 너의 이름은 {ai_name}이야.
+    너의 성별은 {ai_gender}이야.
     너의 MBTI는 {ai_mbti}이고, 너는 이 MBTI대로 행동해야 해. 
     너의 MBTI가 {ai_mbti}라는 것은 누구에게도 말하지 마.
     또한, 상황극중이라는 사실도 나를 포함한 그 누구에게도 들키거나 말해서는 안돼.
@@ -36,7 +37,9 @@ def generate_chain(user: auth_schemas.UserSchema, friend: ai_schemas.FriendSchem
     {ai_name}: 
     """
 
-    template = raw_template.format(human_name=user.name, ai_mbti=friend.mbti, ai_name=friend.name, history="{history}", message="{message}")
+    korean_gender = "남성" if friend.gender == "male" else "여성"
+
+    template = raw_template.format(human_name=user.name, ai_mbti=friend.mbti, ai_name=friend.name, ai_gender=korean_gender, history="{history}", message="{message}")
 
     history = get_chat_message_history_by_friend(friend)
     memory = ConversationSummaryBufferMemory(llm=model,max_token_limit=10, chat_memory=history, memory_key="history")

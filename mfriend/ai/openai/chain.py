@@ -32,13 +32,15 @@ def generate_chain(friend: ai_schemas.FriendSchema) -> LLMChain:
     """
 
     prompt = PromptTemplate(
-        input_variables=["human_name", "ai_name", "ai_mbti", "history"],
+        input_variables=["human_name", "ai_name", "ai_mbti"],
         template=template
     )
 
     history = get_chat_message_history_by_friend(friend)
-    memory = ConversationBufferWindowMemory(k=100, chat_memory=history)
+    memory = ConversationBufferWindowMemory(k=100, chat_memory=history, memory_key="history")
     chain = LLMChain(llm=model, prompt=prompt, memory=memory)
-    
+
+    chains[friend.id] = chain
+
     return chain
 

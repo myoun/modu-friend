@@ -27,3 +27,9 @@ class GetFriendSchema(BaseModel):
 
 class GetConversationSchema(BaseModel):
     friend_id: UUID = Field(title="친구 아이디")
+
+class TossMessageSchema(BaseModel):
+    friend_id: UUID = Field(title="친구 아이디")
+    user_id: str = Field(title="유저 아이디")
+    
+    message: str = Field(title="전달할 메시지")

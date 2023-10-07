@@ -46,11 +46,9 @@ def toss_message_and_response(toss_message_schema: schemas.TossMessageSchema, db
     user = auth_schema.UserSchema.from_orm(auth_crud.get_user_by_id(db, toss_message_schema.user_id))
 
     inputs = {
-        
+        "message": toss_message_schema.message
     }
 
-    respond = chain.run(message=toss_message_schema.message, ai_name=friend.name, human_name=user.name, ai_mbti=friend.mbti)
-
-    print(respond)
+    respond = chain.run(inputs)
 
     return respond

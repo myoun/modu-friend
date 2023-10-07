@@ -1,11 +1,4 @@
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferWindowMemory
@@ -13,6 +6,16 @@ from mfriend.main import settings
 from mfriend.ai import models as ai_models, schemas as ai_schemas
 from mfriend.auth import models as auth_models
 from mfriend.ai.openai.history import get_chat_message_history_by_friend
+from uuid import UUID
+
+chains: dict[UUID, LLMChain] = {}
+
+def get_chain(friend: ai_schemas.FriendSchema) -> LLMChain:
+    if friend.id in chains.keys():
+        return chains[friend.id]
+    chain = generate_chain(friend)
+    chains[friend.id] = chain
+    return chain
 
 
 def generate_chain(friend: ai_schemas.FriendSchema) -> LLMChain:
@@ -34,8 +37,10 @@ def generate_chain(friend: ai_schemas.FriendSchema) -> LLMChain:
     )
 
     history = get_chat_message_history_by_friend(friend)
-    memory = ConversationBufferWindowMemory(k=50000, chat_memory=history)
+    memory = ConversationBufferWindowMemory(k=100, chat_memory=history, memory_key="history")
     chain = LLMChain(llm=model, prompt=prompt, memory=memory)
+
+    chains[friend.id] = chain
 
     return chain
 

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from mfriend.main import get_db
 from  mfriend.ai import crud, models, schemas, exceptions
+from mfriend.auth import crud as auth_crud, schemas as auth_schema
 from mfriend.openapi import OpenApiTags
 from uuid import UUID
 
@@ -10,7 +11,7 @@ router = APIRouter(
     tags=[OpenApiTags.AI]
 )
 
-@router.get("/friend")
+@router.get("/friend/info")
 def get_friend(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.FriendSchema:
     db_friend = crud.get_friend_by_id(db, friend_id)
     if db_friend == None:
@@ -21,13 +22,35 @@ def get_friend(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.Friend
     return friend
 
 @router.post("/friend")
-def create_friend(friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)):
-    db_friend = crud.create_friend(db, friend_schema)
+def create_friend(create_friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)):
+    db_friend = crud.create_friend(db, create_friend_schema)
     friend = schemas.FriendSchema.from_orm(db_friend)
 
     return friend
 
 @router.get("/friend/conversation/")
-def get_conversation():
-    pass
+def get_conversation(friend_id: UUID, db: Session = Depends(get_db)):
+    conversations = crud.get_conversation(db, friend_id)
+    
+    if conversations == None:
+        raise HTTPException(404, "Conversation Not Found")
+    
+    return conversations
 
+
+@router.post("/friend/conversation/")
+def toss_message_and_response(toss_message_schema: schemas.TossMessageSchema, db: Session = Depends(get_db)):
+    chain = crud.get_chain(db, toss_message_schema.friend_id)
+
+    friend = schemas.FriendSchema.from_orm(crud.get_friend_by_id(db, toss_message_schema.friend_id))
+    user = auth_schema.UserSchema.from_orm(auth_crud.get_user_by_id(db, toss_message_schema.user_id))
+
+    inputs = {
+        
+    }
+
+    respond = chain.run(message=toss_message_schema.message, ai_name=friend.name, human_name=user.name, ai_mbti=friend.mbti)
+
+    print(respond)
+
+    return respond

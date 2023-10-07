@@ -9,12 +9,12 @@ router = APIRouter(
     tags=[OpenApiTags.AUTH]
 )
 
-@router.post("/user/info")
-def get_user_info(login: schemas.LoginSchema, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
-    db_user = crud.get_user_by_id(db, login.id)
+@router.get("/user/")
+def get_user_info(user_id: str, db: Session = Depends(get_db)) -> schemas.UserReturnSchema:
+    db_user = crud.get_user_by_id(db, user_id)
     
     if db_user == None:
-        raise exceptions.UserNotFoundError(login.id)
+        raise exceptions.UserNotFoundError(user_id)
     
     user_schema = schemas.UserSchema.from_orm(db_user)
 

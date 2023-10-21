@@ -14,3 +14,7 @@ class UserAlreadyExistError(HTTPException, ApplicationError):
         self.user_id = user_id
         super().__init__(status_code=404, detail=f"User `{user_id}` already exists.")
 
+class PasswordIncorrectError(HTTPException, ApplicationError):
+
+    def __init__(self: Self, user_id: str):
+        super().__init__(status_code=400, detail=f"Received incorrect password fro user `{user_id}.")

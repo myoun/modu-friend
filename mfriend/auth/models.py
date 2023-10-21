@@ -10,5 +10,6 @@ class User(Base):
     id = Column(String(16), primary_key=True, index=True)
     name = Column(String(16))
     hashed_password = Column(String(64))
+    salt = Column(String(32))
 
     friends: Mapped[List["Friend"]] = relationship()

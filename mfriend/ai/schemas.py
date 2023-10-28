@@ -22,7 +22,7 @@ class FriendSchema(BaseModel):
 
 class CreateFriendSchema(BaseModel):
     name: str = Field(title="이름")
-    friend_of: str = Field(title="친구 아이디")
+    friend_of: str = Field(title="사용자 아이디")
     mbti: str = Field(title="친구 MBTI")
     gender: str = Field(title="친구 성별", description="male | female")
 

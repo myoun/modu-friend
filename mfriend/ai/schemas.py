@@ -9,13 +9,22 @@ class FriendSchema(BaseModel):
     mbti: str = Field(title="친구 MBTI")
     gender: str = Field(title="친구 성별")
 
+    @validator("mbti")
+    def mbti_check(cls, v):
+        is_mbti = str(v).upper() in ["ENFJ", "ENFP", "ENTJ", "ENTP", "ESFJ", "ESFP", "ESTJ", "ESTP", 
+                        "INFJ", "INFP", "INTJ", "INTP", "ISFJ", "ISFP", "ISTJ", "ISTP"]
+        if not is_mbti:
+            raise ValueError("Invalid MBTI type submitted.")
+        return v
+    
     @validator("gender")
     def gender_check(cls, v):
-        is_valid_gender = v in ["male", "female"]
+        is_valid_gender = str(v).lower() in ["male", "female"]
 
         if not is_valid_gender:
             raise ValueError("Invalid gender type submitted.")
         return v
+
 
     class Config:
         orm_mode = True
@@ -28,11 +37,20 @@ class CreateFriendSchema(BaseModel):
 
     @validator("mbti")
     def mbti_check(cls, v):
-        is_mbti = v in ["ENFJ", "ENFP", "ENTJ", "ENTP", "ESFJ", "ESFP", "ESTJ", "ESTP", 
+        is_mbti = str(v).upper() in ["ENFJ", "ENFP", "ENTJ", "ENTP", "ESFJ", "ESFP", "ESTJ", "ESTP", 
                         "INFJ", "INFP", "INTJ", "INTP", "ISFJ", "ISFP", "ISTJ", "ISTP"]
         if not is_mbti:
             raise ValueError("Invalid MBTI type submitted.")
         return v
+    
+    @validator("gender")
+    def gender_check(cls, v):
+        is_valid_gender = str(v).lower() in ["male", "female"]
+
+        if not is_valid_gender:
+            raise ValueError("Invalid gender type submitted.")
+        return v
+
 class GetFriendSchema(BaseModel):
     friend_id: UUID = Field(title="친구 아이디")    
 

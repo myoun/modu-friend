@@ -22,11 +22,12 @@ def get_friend(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.Friend
     return friend
 
 @router.post("/friend")
-def create_friend(create_friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)):
+def create_friend(create_friend_schema: schemas.CreateFriendSchema, db: Session = Depends(get_db)) -> list[schemas.FriendSchema]:
     db_friend = crud.create_friend(db, create_friend_schema)
-    friend = schemas.FriendSchema.from_orm(db_friend)
 
-    return friend
+    friends = auth_schema.UserSchema.from_orm(auth_crud.get_user_by_id(db, create_friend_schema.friend_of)).friends
+
+    return friends
 
 @router.get("/friend/conversation/")
 def get_conversation(friend_id: UUID, db: Session = Depends(get_db)):

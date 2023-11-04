@@ -5,3 +5,6 @@
 __pycache__
 
 gunicorn-access.log
+test.db
+
+.pytest_cache

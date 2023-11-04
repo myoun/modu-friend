@@ -1,6 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, BINARY
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-from typing import List
+from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
 from mfriend.database import Base
 from mfriend.data_types import BinaryUUID
 from uuid import uuid4

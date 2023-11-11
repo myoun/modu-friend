@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from mfriend.ai import models, schemas
 from uuid import UUID
-from mfriend.ai.openai import chain, history
+from mfriend.ai.openai import chain
 from langchain.schema import AIMessage
+from fastapi import HTTPException
 
 def get_friend_by_id(db: Session, friend_id: UUID) -> models.Friend | None:
     return db.query(models.Friend).get(friend_id)
@@ -19,7 +20,7 @@ def get_chain(db: Session, friend_id: UUID):
     friend = get_friend_by_id(db, friend_id)
 
     if friend == None:
-        raise Exception("Cannot find user.") # TODO: Change Exception
+        raise HTTPException(404, f"Cannot find friend `{friend_id}`")
 
     llm_chain = chain.get_chain(db, friend)
     return llm_chain

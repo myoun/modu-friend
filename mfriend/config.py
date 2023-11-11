@@ -6,7 +6,7 @@ ENV_FILE = os.path.join(BASE_DIR, ".env")
 
 class Settings(BaseSettings):
     OPENAI_TOKEN: str = 'UNDEFINED'
-    DB_URL: str = 'UNDEFINED'
+    DB_URL: str = "sqlite:///./test.db"
 
     class Config:
         env_file = ENV_FILE

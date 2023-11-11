@@ -53,7 +53,5 @@ def generate_chain(user: auth_schemas.UserSchema, friend: ai_schemas.FriendSchem
 
     chains[friend.id] = chain
 
-    print(memory.chat_memory.messages)
-
     return chain
 

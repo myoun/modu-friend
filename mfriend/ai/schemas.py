@@ -61,3 +61,15 @@ class TossMessageSchema(BaseModel):
     friend_id: UUID = Field(title="친구 아이디")
     user_id: str = Field(title="유저 아이디")    
     message: str = Field(title="전달할 메시지")
+
+class AIMessage(BaseModel):
+    ai: str = Field()
+
+class UserMessage(BaseModel):
+    user: str = Field()
+
+class ConversationReturnSchema(BaseModel):
+    conversation: list[AIMessage | UserMessage] = Field()
+
+class MessageReturnSchema(BaseModel):
+    message: str = Field("채팅 응답")

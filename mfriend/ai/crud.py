@@ -24,18 +24,18 @@ def get_chain(db: Session, friend_id: UUID):
     llm_chain = chain.get_chain(db, friend)
     return llm_chain
 
-def get_conversation(db: Session, friend_id: UUID):
+def get_conversation(db: Session, friend_id: UUID) -> list[schemas.AIMessage | schemas.UserMessage]:
     llm_chain = get_chain(db, friend_id)
     memory = llm_chain.memory
     
     if memory == None:
-        return None
+        return []
     
     raw_conversation = memory.dict()["chat_memory"].messages
 
     conversation = list(
         map(
-            lambda conversation: {"ai" if isinstance(conversation, AIMessage) else "human" : conversation.content}, 
+            lambda conversation: schemas.AIMessage(ai=conversation.content) if isinstance(conversation, AIMessage) else schemas.UserMessage(user=conversation.content), 
             raw_conversation
         )
     )

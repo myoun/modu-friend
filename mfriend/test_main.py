@@ -80,7 +80,7 @@ def test_get_friend_conversation(client: TestClient, test_friend):
 
     friend_conversation = get_friend_conversation_response.json()
 
-    assert type(friend_conversation) == list
+    assert type(friend_conversation["conversation"]) == list
 
 def test_post_friend_conversation(client: TestClient, test_user, test_friend):
 

@@ -30,17 +30,17 @@ def create_friend(create_friend_schema: schemas.CreateFriendSchema, db: Session 
     return friends
 
 @router.get("/friend/conversation/")
-def get_conversation(friend_id: UUID, db: Session = Depends(get_db)):
-    conversations = crud.get_conversation(db, friend_id)
+def get_conversation(friend_id: UUID, db: Session = Depends(get_db)) -> schemas.ConversationReturnSchema:
+    conversation = crud.get_conversation(db, friend_id)
     
-    if conversations == None:
+    if conversation == None:
         raise HTTPException(404, "Conversation Not Found")
     
-    return conversations
+    return schemas.ConversationReturnSchema(conversation=conversation)
 
 
 @router.post("/friend/conversation/")
-def toss_message_and_response(toss_message_schema: schemas.TossMessageSchema, db: Session = Depends(get_db)):
+def toss_message_and_response(toss_message_schema: schemas.TossMessageSchema, db: Session = Depends(get_db)) -> schemas.MessageReturnSchema:
     chain = crud.get_chain(db, toss_message_schema.friend_id)
 
     inputs = {
@@ -49,8 +49,6 @@ def toss_message_and_response(toss_message_schema: schemas.TossMessageSchema, db
 
     response_message = chain.run(inputs)
 
-    response = {
-        "message": response_message
-    }
+    response = schemas.MessageReturnSchema(message=response_message)
 
     return response

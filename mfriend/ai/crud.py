@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from mfriend.ai import models, schemas
 from uuid import UUID
 from mfriend.ai.openai import chain, history
+from langchain.schema import AIMessage
 
 def get_friend_by_id(db: Session, friend_id: UUID) -> models.Friend | None:
     return db.query(models.Friend).get(friend_id)
@@ -32,6 +33,11 @@ def get_conversation(db: Session, friend_id: UUID):
     
     raw_conversation = memory.dict()["chat_memory"].messages
 
-    conversation = []
+    conversation = list(
+        map(
+            lambda conversation: {"ai" if isinstance(conversation, AIMessage) else "human" : conversation.content}, 
+            raw_conversation
+        )
+    )
 
     return conversation

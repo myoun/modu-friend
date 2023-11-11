@@ -36,55 +36,45 @@ def client(session):
 
     yield TestClient(app)
 
+@pytest.fixture()
+def test_user(client: TestClient):
+    response = client.post("/api/auth/user", json={"id": "testuser1", "name" : "John", "password" : "john1234"})
 
-def test_create_user(client: TestClient):
-    response = client.post("/api/auth/user", json={"id": "testuser10", "name" : "John", "password" : "john1234"})
+    return response.json()["user"]
 
-    assert response.status_code == 200
-
-    return response.json()
-
-
-def test_login_user(client: TestClient):
-    created_user = test_create_user(client)["user"]
-
-    login_user_response = client.post("/api/auth/login", json={"id": "testuser10", "password": "john1234"})
-
-    assert login_user_response.status_code == 200
-
-    logined_user = login_user_response.json()["user"]
-
-    assert created_user == logined_user
-
-    return logined_user
-
-def test_create_friend(client: TestClient):
-    logined_user = test_login_user(client)
-    create_friend_response = client.post("/api/ai/friend", json={"name": "ai1", "friend_of": logined_user["id"], "mbti" : "INTP", "gender": "male"})
+@pytest.fixture()
+def test_friend(client: TestClient, test_user):
+    create_friend_response = client.post("/api/ai/friend", json={"name": "ai1", "friend_of": test_user["id"], "mbti" : "INTP", "gender": "male"})
 
     assert create_friend_response.status_code == 200
 
     created_friends = create_friend_response.json()
 
-    return created_friends
+    return created_friends[0]
 
-def test_get_friend_info(client: TestClient):
-    created_friend = test_create_friend(client)[0]
+def test_login_user(client: TestClient, test_user):
 
-    get_friend_info_response = client.get("/api/ai/friend/info", params=[("friend_id", created_friend["id"])])
+    login_user_response = client.post("/api/auth/login", json={"id": test_user["id"], "password": "john1234"})
+
+    assert login_user_response.status_code == 200
+
+    logined_user = login_user_response.json()["user"]
+
+    assert test_user == logined_user
+
+def test_get_friend_info(client: TestClient, test_friend):
+
+    get_friend_info_response = client.get("/api/ai/friend/info", params=[("friend_id", test_friend["id"])])
 
     assert get_friend_info_response.status_code == 200
 
     friend_info = get_friend_info_response.json()
 
-    assert created_friend["id"] == friend_info["id"]
+    assert test_friend["id"] == friend_info["id"]
 
-    return friend_info
+def test_get_friend_conversation(client: TestClient, test_friend):
 
-def test_get_friend_conversation(client: TestClient):
-    friend_info = test_get_friend_info(client)
-
-    get_friend_conversation_response = client.get("/api/ai/friend/conversation", params=[("friend_id", friend_info["id"])])
+    get_friend_conversation_response = client.get("/api/ai/friend/conversation", params=[("friend_id", test_friend["id"])])
 
     assert get_friend_conversation_response.status_code == 200
 
@@ -92,11 +82,12 @@ def test_get_friend_conversation(client: TestClient):
 
     assert type(friend_conversation) == list
 
-def test_post_friend_conversation(client: TestClient):
-    user_info = test_login_user(client)
-    friend_info = test_get_friend_info(client)
-    print(user_info, friend_info)
+def test_post_friend_conversation(client: TestClient, test_user, test_friend):
 
-    post_friend_conversation_response = client.post("/api/ai/friend/conversation", json={"friend_id": friend_info["id", "user_id": user_info["id"], "message": "hi"]})
+    post_friend_conversation_response = client.post("/api/ai/friend/conversation/", json={"friend_id": test_friend["id"], "user_id": test_user["id"], "message": "hi"})
     
     assert post_friend_conversation_response.status_code == 200
+
+    post_friend_conversation = post_friend_conversation_response.json()
+
+    assert type(post_friend_conversation["message"]) == str
